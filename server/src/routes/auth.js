@@ -11,7 +11,7 @@ function setTokenCookie(res, userId, email) {
   res.cookie("token", token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: false, // change to true in production (HTTPS)
+    secure: process.env.NODE_ENV === "production",
     maxAge: 7 * 24 * 3600 * 1000 // 7 days
   });
 }
