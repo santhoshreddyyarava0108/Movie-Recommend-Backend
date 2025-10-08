@@ -13,13 +13,19 @@ const app = express();
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: [
-    "http://localhost:5173", // local frontend for development
-    process.env.CLIENT_ORIGIN // deployed frontend (Render)
-  ],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175", // 👈 add this (your current dev port)
+      "https://movie-recommend-frontend.onrender.com", // (for future deploy)
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  })
+);
+
 
 
 // DB connect
