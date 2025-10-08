@@ -14,9 +14,13 @@ app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN,
-  credentials: true
+  origin: [
+    "http://localhost:5173", // local frontend for development
+    process.env.CLIENT_ORIGIN // deployed frontend (Render)
+  ],
+  credentials: true,
 }));
+
 
 // DB connect
 mongoose.connect(process.env.MONGO_URI)
