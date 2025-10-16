@@ -21,6 +21,8 @@ const allowedOrigins = [
   "http://localhost:5175",
   "http://localhost:5176", // local dev ports
   "https://movie-recommend-frontend.onrender.com", // production
+  "https://movie-recommend-frontend-phi.vercel.app", // ✅ your Vercel frontend domain
+
 ];
 
 app.use(
