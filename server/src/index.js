@@ -14,20 +14,26 @@ app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ CORS configuration (includes preflight support)
+// ✅ CORS configuration (with preflight support)
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:5175",
   "http://localhost:5176", // local dev ports
-  "https://movie-recommend-frontend.onrender.com", // production
-  "https://movie-recommend-frontend-phi.vercel.app", // ✅ your Vercel frontend domain
-
+  "https://movie-recommend-frontend.onrender.com", // old render frontend (fallback)
+  "https://movie-recommend-frontend-phi.vercel.app", // ✅ your current live frontend
 ];
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn("❌ CORS blocked origin:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
@@ -57,5 +63,5 @@ app.use("/api/me", meRoutes);
 // ✅ Server start
 const port = process.env.PORT || 4000;
 app.listen(port, () =>
-  console.log(`🚀 API running at http://localhost:${port}`)
+  console.log(`🚀 API running and listening on port ${port}`)
 );
