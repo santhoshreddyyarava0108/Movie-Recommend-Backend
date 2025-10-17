@@ -22,6 +22,8 @@ const allowedOrigins = [
   "http://localhost:5176", // local dev ports
   "https://movie-recommend-frontend.onrender.com", // old render frontend (fallback)
   "https://movie-recommend-frontend-phi.vercel.app", // ✅ your current live frontend
+  "https://movie-recommend-frontend-m2szb8urh.vercel.app", // ✅ NEW active Vercel deployment
+
 ];
 
 app.use(
