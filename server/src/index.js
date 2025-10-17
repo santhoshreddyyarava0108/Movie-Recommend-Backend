@@ -14,25 +14,25 @@ app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ CORS configuration (with preflight support)
+// ✅ Allowed frontend origins (add any new Vercel URL here)
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:5175",
-  "http://localhost:5176", // local dev ports
-  "https://movie-recommend-frontend.onrender.com", // old render frontend (fallback)
-  "https://movie-recommend-frontend-phi.vercel.app", // ✅ your current live frontend
-  "https://movie-recommend-frontend-m2szb8urh.vercel.app", // ✅ NEW active Vercel deployment
-
+  "http://localhost:5176",
+  "https://movie-recommend-frontend.onrender.com",
+  "https://movie-recommend-frontend-phi.vercel.app",
+  "https://movie-recommend-frontend-m2szb8urh.vercel.app"
 ];
 
+// ✅ CORS configuration
 app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.warn("❌ CORS blocked origin:", origin);
+        console.warn("❌ Blocked CORS origin:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -41,8 +41,20 @@ app.use(
   })
 );
 
-// ✅ Handle preflight (OPTIONS) requests globally
+// ✅ Handle preflight requests globally
 app.options("*", cors());
+
+// ✅ Force-set CORS headers for edge cases
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  next();
+});
 
 // ✅ MongoDB connection
 mongoose
@@ -62,8 +74,8 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/me", meRoutes);
 
-// ✅ Server start
+// ✅ Start server
 const port = process.env.PORT || 4000;
-app.listen(port, () =>
-  console.log(`🚀 API running and listening on port ${port}`)
-);
+app.listen(port, () => {
+  console.log(`🚀 API running and listening on port ${port}`);
+});
