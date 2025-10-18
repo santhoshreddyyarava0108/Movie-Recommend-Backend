@@ -43,7 +43,7 @@ router.post("/register", async (req, res) => {
     setTokenCookie(res, user._id, user.email);
     res.json({ id: user._id, name: user.name, email: user.email });
   } catch (err) {
-    console.error("💥 Register error:", err);
+    console.error("💥 Register error:", err.message);
     res.status(500).json({ error: "Server error during registration" });
   }
 });
@@ -76,7 +76,7 @@ router.post("/login", async (req, res) => {
     setTokenCookie(res, user._id, user.email);
     res.json({ id: user._id, name: user.name, email: user.email });
   } catch (err) {
-    console.error("💥 Login error:", err);
+    console.error("💥 Login error:", err.message);
     res.status(500).json({ error: "Server error during login" });
   }
 });
@@ -94,7 +94,7 @@ router.post("/logout", (_req, res) => {
     console.log("👋 User logged out");
     res.json({ ok: true });
   } catch (err) {
-    console.error("💥 Logout error:", err);
+    console.error("💥 Logout error:", err.message);
     res.status(500).json({ error: "Logout failed" });
   }
 });
